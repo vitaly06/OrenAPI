@@ -60,8 +60,12 @@ public class MainController {
             }
 
             // Сохраняем файл на сервере
+
             File file = new File(filePath);
-            photo.transferTo(file);
+            File dest = new File(file.getAbsolutePath());
+            System.out.println("Текущая директория: " + new File(".").getAbsolutePath());
+            System.out.println("Сохраняемый файл: " + file.getAbsolutePath());
+            photo.transferTo(dest);
 
             // Создаем объект Tour и сохраняем его в базе данных
             Tour tour = new Tour();
@@ -73,6 +77,7 @@ public class MainController {
             tourDAO.addTour(tour);
             return ResponseEntity.status(HttpStatus.CREATED).body("Tour added successfully");
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving tour");
         }
     }
