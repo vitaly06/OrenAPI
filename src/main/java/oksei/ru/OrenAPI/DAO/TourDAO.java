@@ -23,8 +23,8 @@ public class TourDAO {
 
     public void addTour(Tour tour) {
         assert jdbcTemplate != null;
-        jdbcTemplate.update("INSERT INTO tours(name, description, time, price, photo) VALUES(?, ?, ?, ?, ?)",
-                tour.getName(), tour.getDescription(), tour.getTime(), tour.getPrice(), tour.getPhoto());
+        jdbcTemplate.update("INSERT INTO tours(name, description, time, photo) VALUES(?, ?, ?, ?)",
+                tour.getName(), tour.getDescription(), tour.getTime(), tour.getPhoto());
     }
 
     public Tour getTour(int id) {
