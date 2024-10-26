@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 public class TourMapper implements RowMapper<Tour> {
     @Override
@@ -16,6 +17,7 @@ public class TourMapper implements RowMapper<Tour> {
             tour.setDescription(resultSet.getString("description"));
             tour.setTime(resultSet.getInt("time"));
             tour.setPhoto(resultSet.getBytes("photo"));
+            tour.setBase64(Base64.getEncoder().encodeToString(tour.getPhoto()));
         }
         catch (Exception e){
             System.out.println("Exception => " + e.getMessage());
