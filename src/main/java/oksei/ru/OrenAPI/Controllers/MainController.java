@@ -39,13 +39,12 @@ public class MainController {
                         @RequestParam(value = "name") String  name,
                         @RequestParam("description") String description,
                         @RequestParam("time") int time,
-                        @RequestPart("photo") MultipartFile photo) throws IOException{
+                        @RequestParam("photo") MultipartFile photo) throws IOException{
         Tour tour = new Tour();
         tour.setName(name);
         tour.setDescription(description);
         tour.setTime(time);
-        byte[] imageData = photo.getBytes();
-        tour.setPhoto(imageData);
+        tour.setPhoto(photo.getBytes());
         tourDAO.addTour(tour);
     }
 
