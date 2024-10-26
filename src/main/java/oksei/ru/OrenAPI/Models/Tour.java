@@ -7,7 +7,6 @@ public class Tour {
     private int time;
     private int price;
     private byte[] photo;
-    private String base64;
 
     public int getId() {
         return id;
@@ -57,11 +56,4 @@ public class Tour {
         this.photo = photo;
     }
 
-    public String getBase64() {
-        return base64;
-    }
-
-    public void setBase64(String base64) {
-        this.base64 = base64;
-    }
 }
