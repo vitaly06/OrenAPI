@@ -6,7 +6,7 @@ public class Tour {
     private String description;
     private int time;
     private int price;
-    private byte[] photo;
+    private String photoUrl;
 
     public int getId() {
         return id;
@@ -48,12 +48,11 @@ public class Tour {
         this.price = price;
     }
 
-    public byte[] getPhoto() {
-        return photo;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
-
 }

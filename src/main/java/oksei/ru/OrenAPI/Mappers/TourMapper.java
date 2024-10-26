@@ -16,7 +16,7 @@ public class TourMapper implements RowMapper<Tour> {
             tour.setName(resultSet.getString("name"));
             tour.setDescription(resultSet.getString("description"));
             tour.setTime(resultSet.getInt("time"));
-            tour.setPhoto(resultSet.getBytes("photo"));
+            tour.setPhotoUrl(resultSet.getString("photoUrl"));
         }
         catch (Exception e){
             System.out.println("Exception => " + e.getMessage());
