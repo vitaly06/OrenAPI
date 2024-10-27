@@ -48,6 +48,11 @@ public class MainController {
         return tourDAO.getTour(id);
     }
 
+    @GetMapping("/photos/{id}")
+    public List<TourImage> getTourImage(@PathVariable int id) {
+        return tourImageDAO.getImagesById(id);
+    }
+
     @PostMapping("/addTour")
     public ResponseEntity<String> addTour(HttpServletRequest request,
                         @RequestParam(value = "photo") MultipartFile photo,
