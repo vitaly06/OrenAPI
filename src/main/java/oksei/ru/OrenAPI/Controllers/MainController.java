@@ -84,7 +84,11 @@ public class MainController {
             tour.setTime(time);
             tour.setPhotoUrl("/tours/images/" + fileName);
             tourDAO.addTour(tour);
-            int id = tourDAO.getMaxId();
+            int id = tourDAO.getMaxId(); // максимальный id в БД
+            TourImage ti = new TourImage();
+            ti.setPhotoUrl("tours/images/" + fileName);
+            ti.setTourId(id);
+
             // Остальные загруженные фотки
             for(MultipartFile forPhoto : photos){
                 if (forPhoto != null) {
@@ -93,7 +97,7 @@ public class MainController {
                     file = new File(filePath);
                     dest = new File(file.getAbsolutePath());
                     forPhoto.transferTo(dest);
-                    TourImage ti = new TourImage();
+                    ti = new TourImage();
                     ti.setPhotoUrl("tours/images/" + fileName);
                     ti.setTourId(id);
                     tourImageDAO.addTourImage(ti);
