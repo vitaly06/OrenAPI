@@ -3,7 +3,9 @@ package oksei.ru.OrenAPI.Controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import oksei.ru.OrenAPI.Bot.Bot;
 import oksei.ru.OrenAPI.DAO.TourDAO;
+import oksei.ru.OrenAPI.DAO.TourImageDAO;
 import oksei.ru.OrenAPI.Models.Tour;
+import oksei.ru.OrenAPI.Models.TourImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -28,6 +31,8 @@ import java.util.List;
 public class MainController {
     @Autowired
     TourDAO tourDAO;
+    @Autowired
+    TourImageDAO tourImageDAO;
     public Bot bot = new Bot();
     private final String uploadDir = "uploads/";
     public MainController() throws TelegramApiException {
@@ -45,36 +50,50 @@ public class MainController {
 
     @PostMapping("/addTour")
     public ResponseEntity<String> addTour(HttpServletRequest request,
+                        @RequestParam(value = "photo") MultipartFile photo,
+                        @RequestParam(value = "photo1", required = false) MultipartFile photo1,
+                        @RequestParam(value = "photo2", required = false) MultipartFile photo2,
+                        @RequestParam(value = "photo3", required = false) MultipartFile photo3,
+                        @RequestParam(value = "photo4", required = false) MultipartFile photo4,
+                        @RequestParam(value = "photo5", required = false) MultipartFile photo5,
+                        @RequestParam(value = "photo6", required = false) MultipartFile photo6,
                         @RequestParam(value = "name") String  name,
                         @RequestParam("description") String description,
-                        @RequestParam("time") int time,
-                        @RequestParam("photo") MultipartFile photo) throws IOException{
+                                          @RequestParam("time") int time) throws IOException{
         try {
+            List<MultipartFile> photos = Arrays.asList(photo1, photo2, photo3, photo4, photo5, photo6);
             String fileName = System.currentTimeMillis() + "_" + photo.getOriginalFilename();
             String filePath = uploadDir + fileName;
-
             // Создаем директорию, если она не существует
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-
             // Сохраняем файл на сервере
-
             File file = new File(filePath);
             File dest = new File(file.getAbsolutePath());
-            System.out.println("Текущая директория: " + new File(".").getAbsolutePath());
-            System.out.println("Сохраняемый файл: " + file.getAbsolutePath());
             photo.transferTo(dest);
-
-            // Создаем объект Tour и сохраняем его в базе данных
             Tour tour = new Tour();
             tour.setName(name);
             tour.setDescription(description);
             tour.setTime(time);
             tour.setPhotoUrl("/tours/images/" + fileName);
-
             tourDAO.addTour(tour);
+            int id = tourDAO.getMaxId();
+            // Остальные загруженные фотки
+            for(MultipartFile forPhoto : photos){
+                if (forPhoto != null) {
+                    fileName = System.currentTimeMillis() + "_" + forPhoto.getOriginalFilename();
+                    filePath = uploadDir + fileName;
+                    file = new File(filePath);
+                    dest = new File(file.getAbsolutePath());
+                    forPhoto.transferTo(dest);
+                    TourImage ti = new TourImage();
+                    ti.setPhotoUrl("tours/images/" + fileName);
+                    ti.setTourId(id);
+                    tourImageDAO.addTourImage(ti);
+                }
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body("Tour added successfully");
         } catch (IOException e) {
             System.out.println(e.getMessage());

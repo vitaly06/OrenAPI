@@ -37,4 +37,10 @@ public class TourDAO {
         assert jdbcTemplate != null;
         return jdbcTemplate.query("SELECT * FROM tours", new TourMapper());
     }
+
+    public int getMaxId() {
+        Tour t = jdbcTemplate.query("SELECT * FROM tours ORDER BY id DESC LIMIT 0, 1", new TourMapper())
+                .stream().findAny().orElseThrow(null);
+        return t.getId();
+    }
 }
