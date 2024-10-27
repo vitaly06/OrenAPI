@@ -128,10 +128,11 @@ public class MainController {
         }
     }
     @PostMapping("/record")
-    public void newRecord(HttpServletRequest request, @RequestParam("number") String number,
+    public void newRecord(HttpServletRequest request, @RequestParam("phone") String number,
+                          @RequestParam("fullName") String fullName,
                           @RequestParam("tour") String tour) {
         try {
-            bot.sendAds(number + "\nПоездка: " + tour);
+            bot.sendAds(fullName + ", " + number + "\nПоездка: " + tour);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
